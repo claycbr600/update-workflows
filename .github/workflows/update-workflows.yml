@@ -1,0 +1,34 @@
+name: Update Workflows
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch test repo
+        uses: actions/checkout@v2
+        with:
+          repository: claycbr600/create-pull-request
+          path: ./create-pull-request
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Update file
+        run: |
+          mkdir -p ./create-pull-request/tmp
+          echo "charlie is really batman!" > ./create-pull-request/tmp/output.txt
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: ./create-pull-request
+          commit-message: Update test
+          committer: Charlie McCain <cmccain@intellum.com>
+          branch: update-workflows-test
+          title: Update Workflows
+          reviewers: ${{ github.actor }}
