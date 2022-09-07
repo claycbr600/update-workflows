@@ -22,6 +22,7 @@ jobs:
         with:
           file: ./params.yml
           key-path: '["packaging_branches"]'
+        continue-on-error: true
 
       - name: Set packaging branches value
         id: packaging
