@@ -22,11 +22,11 @@ jobs:
         with:
           cmd: yq -o json '.packaging.branches' < params.yml
 
-      # - name: yq output
-      #   run: |
-      #     result=${{ steps.packaging-branches.outputs.result }}
-      #     echo "result = $result"
-      #     echo "::set-output name=yq::$result"
+      - name: yq output
+        run: |
+          result=${{ toJSON(steps.packaging-branches.outputs.result) }}
+          echo "result = $result"
+          echo "::set-output name=yq::$result"
 
       - name: Set packaging branches value
         id: packaging
