@@ -21,7 +21,7 @@ jobs:
         uses: KJ002/read-yaml@1.6
         with:
           file: ./params.yml
-          key-path: '["packaging_branches"]'
+          key-path: '["packaging", "branches"]'
         continue-on-error: true
 
       - name: Set packaging branches value
@@ -37,7 +37,7 @@ jobs:
       - name: Get jenkins pkg builder job name
         id: deployment
         run: |
-          if ${{ contains(fromJSON(steps.packaging.outputs.data), github.head_ref) }}; then
+          if ${{ contains(fromJSON(steps.packaging.outputs.branches), github.head_ref) }}; then
             echo "found branch ${{ github.head_ref }}"
           else
             echo "no branch found"
