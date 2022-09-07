@@ -26,7 +26,7 @@ jobs:
       - name: Set packaging branches value
         id: packaging
         run: |
-          jsonStr=${{ steps.packaging-branches.outputs.data }}
+          jsonStr=${{ toJSON(steps.packaging-branches.outputs.data) }}
           if [[ -z $jsonStr ]]; then
             jsonStr='[]'
           fi
