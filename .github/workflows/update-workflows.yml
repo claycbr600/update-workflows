@@ -18,27 +18,32 @@ jobs:
 
       - name: Check packaging release branches
         id: packaging-branches
-        uses: KJ002/read-yaml@1.6
+        uses: mikefarah/yq@v4.27.3
         with:
-          file: ./params.yml
-          key-path: '["packaging", "branches"]'
-        continue-on-error: true
+          cmd: yq -o json '.packaging.branches' < params.yml
+
+      - name: yq output
+        run: |
+          result=${{ steps.packaging-branches.outputs.result }}
+          echo "result = $result"
+          echo "::set-output name=yq::$result"
 
       # - name: Set packaging branches value
       #   id: packaging
       #   run: |
-      #     jsonStr=${{ toJSON(steps.packaging-branches.outputs.data) }}
-      #     if [[ -z $jsonStr || $jsonStr == 'null' ]]; then
+      #     if [[ ${{ steps.packaging-branches.outputs.result }} == 'null' ]]; then
       #       jsonStr='[]'
+      #     else
+      #       jsonStr=${{ toJSON(steps.packaging-branches.outputs.result) }}
       #     fi
       #     echo "jsonStr = $jsonStr"
       #     echo "::set-output name=branches::$jsonStr"
 
-      - name: Get jenkins pkg builder job name
-        id: deployment
-        run: |
-          if ${{ contains(fromJSON(steps.packaging-branches.outputs.data || '[]'), github.head_ref) }}; then
-            echo "found branch ${{ github.head_ref }}"
-          else
-            echo "no branch found"
-          fi
+      # - name: Get jenkins pkg builder job name
+      #   id: deployment
+      #   run: |
+      #     if ${{ contains(fromJSON(steps.packaging-branches.outputs.data || '[]'), github.head_ref) }}; then
+      #       echo "found branch ${{ github.head_ref }}"
+      #     else
+      #       echo "no branch found"
+      #     fi
