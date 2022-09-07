@@ -39,6 +39,6 @@ jobs:
           branches=${{ steps.packaging.outputs.branches }}
           echo "head_ref = $head_ref"
           echo "branches = $branches"
-          if ${{ github.event_name == 'pull_request' && github.ref_type == 'branch' && contains(fromJSON(steps.packaging.outputs.branches), '${{ github.head_ref }}') }}; then
-            echo "branch $head_ref found in $branches"
-          fi
+          # if ${{ github.event_name == 'pull_request' && github.ref_type == 'branch' && contains(fromJSON(steps.packaging.outputs.branches), '${{ github.head_ref }}') }}; then
+          #   echo "branch $head_ref found in $branches"
+          # fi
