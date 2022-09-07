@@ -24,20 +24,20 @@ jobs:
           key-path: '["packaging", "branches"]'
         continue-on-error: true
 
-      - name: Set packaging branches value
-        id: packaging
-        run: |
-          jsonStr=${{ toJSON(steps.packaging-branches.outputs.data) }}
-          if [[ -z $jsonStr || $jsonStr == 'null' ]]; then
-            jsonStr='[]'
-          fi
-          echo "jsonStr = $jsonStr"
-          echo "::set-output name=branches::$jsonStr"
+      # - name: Set packaging branches value
+      #   id: packaging
+      #   run: |
+      #     jsonStr=${{ toJSON(steps.packaging-branches.outputs.data) }}
+      #     if [[ -z $jsonStr || $jsonStr == 'null' ]]; then
+      #       jsonStr='[]'
+      #     fi
+      #     echo "jsonStr = $jsonStr"
+      #     echo "::set-output name=branches::$jsonStr"
 
       - name: Get jenkins pkg builder job name
         id: deployment
         run: |
-          if ${{ contains(fromJSON(steps.packaging.outputs.branches), github.head_ref) }}; then
+          if ${{ contains(fromJSON(steps.packaging-branches.outputs.data || '[]'), github.head_ref) }}; then
             echo "found branch ${{ github.head_ref }}"
           else
             echo "no branch found"
