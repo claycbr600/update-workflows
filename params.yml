@@ -1,3 +1,4 @@
-branches:
-  - identity/batman
-  - captain america
+packaging:
+  release:
+    branches:
+    - charlie/update-workflows

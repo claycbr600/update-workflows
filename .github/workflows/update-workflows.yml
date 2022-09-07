@@ -13,44 +13,32 @@ jobs:
         id: github_context_step
         run: echo '${{ toJSON(github) }}'
 
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Check out repository code
+        uses: actions/checkout@v2
 
-      - name: Run read-yaml action
-        id: yaml-data
+      - name: Check packaging release branches
+        id: packaging-branches
         uses: KJ002/read-yaml@1.6
         with:
           file: ./params.yml
-          key-path: '["branches"]'
+          key-path: '["packaging", "release", "branches"]'
 
-      - name: Display read-yaml output
-        run: echo "${{ steps.yaml-data.outputs.data }}"
-
-      - name: yaml contains item
+      - name: Set packaging branches value
+        id: packaging
         run: |
-          value=${{ contains(fromJson(steps.yaml-data.outputs.data), 'captain america') }}
-          echo "captain america = $value"
-
-      - name: read-yaml empty
-        id: yaml-empty
-        uses: KJ002/read-yaml@1.6
-        with:
-          file: ./params.yml
-          key-path: '["blah"]'
-
-      - name: set yaml default value
-        id: yaml-value
-        run: |
-          jsonStr=${{ steps.yaml-empty.outputs.data }}
+          jsonStr=${{ steps.packaging-branches.outputs.data }}
           if [[ -z $jsonStr ]]; then
             jsonStr='[]'
           fi
           echo "::set-output name=branches::$jsonStr"
 
-      - name: yaml contains item
+      - name: Get jenkins pkg builder job name
+        id: deployment
         run: |
-          value=${{ contains(fromJson(steps.yaml-value.outputs.branches), 'captain america') }}
-          echo "captain america = $value"
-
-      - name: Display read-yaml output
-        run: echo "${{ steps.yaml-empty.outputs.data }}"
+          head_ref=${{ github.head_ref }}
+          branches=${{ steps.packaging.outputs.branches }}
+          echo "head_ref = $head_ref"
+          echo "branches = $branches"
+          if ${{ github.event_name == 'pull_request' && github.ref_type == 'branch' && contains(fromJSON(steps.packaging.outputs.branches), '${{ github.head_ref }}') }}; then
+            echo "branch $head_ref found in $branches"
+          fi
