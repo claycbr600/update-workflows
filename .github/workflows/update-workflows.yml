@@ -31,7 +31,7 @@ jobs:
       - name: Set packaging branches value
         id: packaging
         run: |
-          if [[ ${{ steps.packaging-branches.outputs.result }} == 'null' ]]; then
+          if [[ ${{ steps.packaging-branches.outputs.result }} == null ]]; then
             jsonStr='[]'
           else
             jsonStr=${{ toJSON(steps.packaging-branches.outputs.result) }}
@@ -39,11 +39,11 @@ jobs:
           echo "jsonStr = $jsonStr"
           echo "::set-output name=branches::$jsonStr"
 
-      # - name: Get jenkins pkg builder job name
-      #   id: deployment
-      #   run: |
-      #     if ${{ contains(fromJSON(steps.packaging-branches.outputs.data || '[]'), github.head_ref) }}; then
-      #       echo "found branch ${{ github.head_ref }}"
-      #     else
-      #       echo "no branch found"
-      #     fi
+      - name: Get jenkins pkg builder job name
+        id: deployment
+        run: |
+          if ${{ contains(fromJSON(steps.packaging.outputs.branches), github.head_ref) }}; then
+            echo "found branch ${{ github.head_ref }}"
+          else
+            echo "no branch found"
+          fi
