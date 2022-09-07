@@ -39,6 +39,6 @@ jobs:
           branches=${{ steps.packaging.outputs.branches }}
           echo "head_ref = $head_ref"
           echo "branches = $branches"
-          if ${{ contains(fromJSON(steps.packaging.outputs.branches), github.head_ref) }}; then
+          if ${{ contains(fromJSON(steps.packaging-branches.outputs.data), github.head_ref) }}; then
             echo "here"
           fi
