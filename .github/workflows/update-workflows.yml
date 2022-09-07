@@ -35,10 +35,8 @@ jobs:
       - name: Get jenkins pkg builder job name
         id: deployment
         run: |
-          head_ref=${{ github.head_ref }}
-          branches=${{ steps.packaging.outputs.branches }}
-          echo "head_ref = $head_ref"
-          echo "branches = $branches"
           if ${{ contains(fromJSON(steps.packaging-branches.outputs.data), github.head_ref) }}; then
-            echo "here"
+            echo "found branch ${{ github.head_ref }}"
+          else
+            echo "no branch found"
           fi

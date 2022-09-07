@@ -1,4 +1,4 @@
 packaging:
   release:
     branches:
-    - update-workflows
+    - charlie/update-workflows
