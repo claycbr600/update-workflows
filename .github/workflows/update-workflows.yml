@@ -40,7 +40,11 @@ jobs:
 
       - name: yaml contains item
         run: |
-          value=${{ contains(fromJson(steps.yaml-empty.outputs.data), 'captain america') }}
+          jsonStr=${{ steps.yaml-empty.outputs.data }}
+          if [[ -z $jsonStr ]]; then
+            jsonStr='[]'
+          fi
+          value=${{ contains(fromJson($jsonStr), 'captain america') }}
           echo "captain america = $value"
 
       - name: Display read-yaml output
