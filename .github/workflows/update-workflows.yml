@@ -31,6 +31,7 @@ jobs:
           if [[ -z $jsonStr || $jsonStr == 'null' ]]; then
             jsonStr='[]'
           fi
+          echo "jsonStr = $jsonStr"
           echo "::set-output name=branches::$jsonStr"
 
       - name: Get jenkins pkg builder job name
