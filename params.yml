@@ -1,3 +1,3 @@
 packaging:
-  # branches:
-  #   - charlie/update-workflows
+  branches:
+    - charlie/update-workflows
