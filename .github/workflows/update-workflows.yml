@@ -20,7 +20,7 @@ jobs:
         id: packaging-branches
         uses: mikefarah/yq@v4.27.3
         with:
-          cmd: yq -o=json -I=0 '.packaging.branches' < params.yml
+          cmd: yq -o=json -I=0 '.packaging.branches' params.yml
 
       - name: Set packaging branches value
         id: packaging
