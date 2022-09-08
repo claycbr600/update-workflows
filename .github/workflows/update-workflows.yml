@@ -20,13 +20,18 @@ jobs:
         id: packaging-branches
         uses: mikefarah/yq@v4.27.3
         with:
-          cmd: yq -o=json -I=0 '.packaging.branches' params.yml
+          cmd: |
+            result=$(yq -o=json -I=0 '.packaging.branches' params.yml)
+            if [[ $result == null ]]; then
+              echo '[]'
+            else
+              echo $result
+            fi
 
       - name: Set packaging branches value
         id: packaging
         run: |
-          # jsonStr=${{ toJSON(steps.packaging-branches.outputs.result) }}
-          jsonStr=${{ steps.packaging-branches.outputs.result }}
+          jsonStr=${{ toJSON(steps.packaging-branches.outputs.result) }}
           if [[ $jsonStr == null ]]; then
             jsonStr='[]'
           fi
