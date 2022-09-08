@@ -23,26 +23,25 @@ jobs:
           cmd: |
             result=$(yq -o=json -I=0 '.packaging.branches' params.yml)
             if [[ $result == null ]]; then
-              echo '[]'
-            else
-              echo $result
+              result='[]'
             fi
+            echo $result
 
-      - name: Set packaging branches value
-        id: packaging
-        run: |
-          echo "yq result = ${{ steps.packaging-branches.outputs.result }}"
-          jsonStr=${{ toJSON(steps.packaging-branches.outputs.result) }}
-          if [[ $jsonStr == null ]]; then
-            jsonStr='[]'
-          fi
-          echo "jsonStr = $jsonStr"
-          echo "::set-output name=branches::$jsonStr"
+      # - name: Set packaging branches value
+      #   id: packaging
+      #   run: |
+      #     echo "yq result = ${{ steps.packaging-branches.outputs.result }}"
+      #     jsonStr=${{ toJSON(steps.packaging-branches.outputs.result) }}
+      #     if [[ $jsonStr == null ]]; then
+      #       jsonStr='[]'
+      #     fi
+      #     echo "jsonStr = $jsonStr"
+      #     echo "::set-output name=branches::$jsonStr"
 
       - name: Get jenkins pkg builder job name
         id: deployment
         run: |
-          if ${{ contains(fromJSON(steps.packaging.outputs.branches), github.head_ref) }}; then
+          if ${{ contains(fromJSON(steps.packaging-branches.outputs.result), github.head_ref) }}; then
             echo "found branch ${{ github.head_ref }}"
           else
             echo "no branch found"
