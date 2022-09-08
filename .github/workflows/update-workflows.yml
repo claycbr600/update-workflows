@@ -16,6 +16,11 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
+      - name: action-test
+        uses: ./.github/actions/test
+        with:
+          app_name: charlie
+
       - name: Check packaging release branches
         id: packaging-branches
         uses: mikefarah/yq@v4.27.3
