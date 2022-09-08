@@ -31,6 +31,7 @@ jobs:
       - name: Set packaging branches value
         id: packaging
         run: |
+          echo "yq result = ${{ steps.packaging-branches.outputs.result }}"
           jsonStr=${{ toJSON(steps.packaging-branches.outputs.result) }}
           if [[ $jsonStr == null ]]; then
             jsonStr='[]'
