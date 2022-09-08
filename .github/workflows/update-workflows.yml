@@ -18,8 +18,6 @@ jobs:
 
       - name: action-test
         uses: ./.github/actions/test
-        with:
-          app_name: charlie
 
       - name: Check packaging release branches
         id: packaging-branches
