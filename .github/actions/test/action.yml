@@ -1,8 +1,6 @@
 name: Action Test
 
 inputs:
-  app_name:
-    required: true
   weather:
     required: false
     default: qa-envs-1
