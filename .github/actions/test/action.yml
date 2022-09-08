@@ -12,6 +12,7 @@ runs:
 
   steps:
     - name: Dump GitHub context
+      shell: bash
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
       run: |
