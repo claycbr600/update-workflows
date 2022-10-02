@@ -20,15 +20,20 @@ jobs:
 
       - name: Get tag version
         uses: actions/github-script@v5
-        id: tag
+        id: tag-version
         with:
+          result-encoding: string
           script: |
             const resp = await github.rest.git.listMatchingRefs({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "tags/${{ steps.date.outputs.today }}"
             })
-            return resp.data
+            if (resp.data.length == 0) {
+              return "${{ steps.date.outputs.today }}.1"
+            } else {
+              return resp.data
+            }
 
       - name: Response output
-        run: echo data = '${{ steps.tag.outputs.result }}'
+        run: echo data = '${{ steps.tag-version.outputs.result }}'
