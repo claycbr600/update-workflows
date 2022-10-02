@@ -22,7 +22,7 @@ jobs:
         uses: actions/github-script@v5
         id: tag-version
         with:
-          # result-encoding: string
+          result-encoding: string
           script: |
             const resp = await github.rest.git.listMatchingRefs({
               owner: context.repo.owner,
@@ -35,8 +35,7 @@ jobs:
               let items = resp.data.map(item => item.ref.replace("refs/tags/", ""))
               let current_tag = items.sort().pop()
               let patch = current_tag.split('.').pop()
-              patch++
-              return `${{ steps.date.outputs.today }}.${patch}`
+              return `${{ steps.date.outputs.today }}.${++patch}`
             }
 
       - name: Response output
