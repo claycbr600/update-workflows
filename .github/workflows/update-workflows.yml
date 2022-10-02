@@ -37,3 +37,4 @@ jobs:
 
       - name: Response output
         run: echo data = '${{ steps.tag-version.outputs.result }}'
+
