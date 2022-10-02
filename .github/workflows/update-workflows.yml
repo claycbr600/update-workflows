@@ -32,7 +32,8 @@ jobs:
             if (resp.data.length == 0) {
               return "${{ steps.date.outputs.today }}.1"
             } else {
-              return resp.data
+              let items = resp.data.map(item => item.ref.replace("refs/tags/", ""))
+              return items
             }
 
       - name: Response output
