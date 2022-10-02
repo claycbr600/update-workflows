@@ -9,27 +9,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Dump GitHub context
-      run: echo '${{ toJSON(github) }}'
+      - name: Dump GitHub context
+        run: echo '${{ toJSON(github) }}'
 
-    - name: Set date
-      id: date
-      run: |
-        date=$(date +%Y.%m.%d)
-        echo "::set-output name=today::$date"
+      - name: Set date
+        id: date
+        run: |
+          date=$(date +%Y.%m.%d)
+          echo "::set-output name=today::$date"
 
-    - name: Get tag version
-      uses: actions/github-script@v5
-      id: tag
-      with:
-        script: |
-          const resp = await github.rest.git.listMatchingRefs({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: "tags/v2"
-          })
-          # const data = resp.data[0]
-          return resp
+      - name: Get tag version
+        uses: actions/github-script@v5
+        id: tag
+        with:
+          script: |
+            const resp = await github.rest.git.listMatchingRefs({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'tags/v2'
+            })
+            return resp
 
-    - name: Response output
-      run: echo '${{ steps.tag.outputs.result }}'
+      - name: Response output
+        run: echo '${{ steps.tag.outputs.result }}'
