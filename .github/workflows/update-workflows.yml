@@ -22,7 +22,7 @@ jobs:
         uses: actions/github-script@v5
         id: tag-version
         with:
-          result-encoding: string
+          # result-encoding: string
           script: |
             const resp = await github.rest.git.listMatchingRefs({
               owner: context.repo.owner,
