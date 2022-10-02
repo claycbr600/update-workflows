@@ -26,9 +26,9 @@ jobs:
             const resp = await github.rest.git.listMatchingRefs({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'tags/v2'
+              ref: "tags/${{ steps.date.outputs.today }}"
             })
-            return resp
+            return resp.data
 
       - name: Response output
-        run: echo '${{ steps.tag.outputs.result }}'
+        run: echo data = '${{ steps.tag.outputs.result }}'
