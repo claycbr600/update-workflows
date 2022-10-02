@@ -33,7 +33,10 @@ jobs:
               return "${{ steps.date.outputs.today }}.1"
             } else {
               let items = resp.data.map(item => item.ref.replace("refs/tags/", ""))
-              return items
+              let current_tag = items.sort().pop()
+              let patch = current_tag.split('.').pop()
+              patch++
+              return `${{ steps.date.outputs.today }}.${patch}`
             }
 
       - name: Response output
