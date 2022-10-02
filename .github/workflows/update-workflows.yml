@@ -9,34 +9,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Dump GitHub context
-        id: github_context_step
-        run: echo '${{ toJSON(github) }}'
+    - name: Dump GitHub context
+      run: echo '${{ toJSON(github) }}'
 
-      - name: Check out repository code
-        uses: actions/checkout@v2
+    - name: Set date
+      id: date
+      run: |
+        date=$(date +%Y.%m.%d)
+        echo "::set-output name=today::$date"
 
-      - name: action-test
-        uses: ./.github/actions/test
-        with:
-          app_name: charlie
+    - name: Get tag version
+      uses: actions/github-script@v5
+      id: tag
+      with:
+        script: |
+          const resp = await github.rest.git.listMatchingRefs({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: "tags/${{ steps.date.outputs.today }}"
+          })
+          # const data = resp.data[0]
+          return resp
 
-      - name: Check packaging release branches
-        id: packaging-branches
-        uses: mikefarah/yq@v4.27.3
-        with:
-          cmd: |
-            result=$(yq -o=json -I=0 '.packaging.branches' params.yml)
-            if [[ $result == null ]]; then
-              result='[]'
-            fi
-            echo $result
-
-      - name: Get jenkins pkg builder job name
-        id: deployment
-        run: |
-          if ${{ contains(fromJSON(steps.packaging-branches.outputs.result), github.head_ref) }}; then
-            echo "found branch ${{ github.head_ref }}"
-          else
-            echo "no branch found"
-          fi
+    - name: Response output
+      run: echo '${{ steps.tag.outputs.result }}'
