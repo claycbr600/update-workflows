@@ -1,4 +1,4 @@
-module.exports = ({github, context}) => {
+module.exports = async ({github, context}) => {
   let resp = await github.rest.repos.getLatestRelease({
     owner: context.repo.owner,
     repo: context.repo.repo
@@ -6,14 +6,14 @@ module.exports = ({github, context}) => {
   let tag_name = resp.data.tag_name
 
   // sha of latest release tag
-  resp = github.rest.git.listMatchingRefs({
+  resp = await github.rest.git.listMatchingRefs({
     owner: context.repo.owner,
     repo: context.repo.repo,
     ref: `tags/${tag_name}`
   })
   let tag_sha = resp.data[0].object.sha
 
-  resp = github.rest.git.getCommit({
+  resp = await github.rest.git.getCommit({
     owner: context.repo.owner,
     repo: context.repo.repo,
     commit_sha: tag_sha
@@ -21,7 +21,7 @@ module.exports = ({github, context}) => {
   let release_commit = resp.data
 
   // commits since latest release
-  resp = github.rest.repos.listCommits({
+  resp = await github.rest.repos.listCommits({
     owner: context.repo.owner,
     repo: context.repo.repo,
     since: release_commit.author.date
@@ -33,7 +33,7 @@ module.exports = ({github, context}) => {
   let commits_without_issues = []
   // console.log(commits)
 
-  for (commit in commits) {
+  commits.forEach(commit => {
     // console.log('commit')
     // console.log(commit)
     let message = commit.commit.message
@@ -51,6 +51,7 @@ module.exports = ({github, context}) => {
     }
 
     for (issue_ref in issue_refs) {
+    issue_refs.forEach(async issue_ref => {
       if (issue_ref.startsWith('(')) {
         return
       }
@@ -63,7 +64,7 @@ module.exports = ({github, context}) => {
         var issue_number = issue_ref.replace('#', '')
       }
 
-      resp = github.rest.issues.get({
+      resp = await github.rest.issues.get({
         owner: context.repo.owner,
         repo: context.repo.repo,
         issue_number: issue_number
@@ -76,11 +77,11 @@ module.exports = ({github, context}) => {
         link: `* [${issue.title}](https://github.com/intellum/${repo}/issues/${issue_number})`
       })
       console.log(issues)
-    }
-  }
+    })
 
-  return {
-    issues: issues,
-    commits_without_issues: commits_without_issues
-  }
+    return {
+      issues: issues,
+      commits_without_issues: commits_without_issues
+    }
+  })
 }
