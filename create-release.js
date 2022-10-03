@@ -34,7 +34,7 @@ module.exports = async ({github, context}) => {
 
   commits.forEach(commit => {
     let message = commit.commit.message
-    let owner_repo = '${{ github.repository }}'
+    let owner_repo = context.repo.repo
     console.log('owner_repo: %s', owner_repo)
     let repository = owner_repo.split('/')[1]
     const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g
