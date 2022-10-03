@@ -33,7 +33,7 @@ module.exports = async ({github, context}) => {
   let commits_without_issues = []
   // console.log(commits)
 
-  commits.forEach(await commit => {
+  commits.forEach(await (commit) => {
     // console.log('commit')
     // console.log(commit)
     let message = commit.commit.message
