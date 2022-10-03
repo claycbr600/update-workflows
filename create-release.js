@@ -50,7 +50,6 @@ module.exports = async ({github, context}) => {
       return
     }
 
-    for (issue_ref in issue_refs) {
     issue_refs.forEach(async issue_ref => {
       if (issue_ref.startsWith('(')) {
         return
