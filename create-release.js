@@ -48,6 +48,7 @@ module.exports = async ({github, context}) => {
     }
 
     issue_refs.forEach(async issue_ref => {
+      console.log('issue ref %s', issue_ref)
       if (issue_ref.startsWith('(')) {
         return
       }
