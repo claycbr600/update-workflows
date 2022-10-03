@@ -78,9 +78,38 @@ jobs:
             let owner_repo = '${{ github.repository }}'
             let repo = owner_repo.split('/')[1]
             commits.forEach(commit => {
-              console.log(commit.message)
+              let message = commit.commit.message
+              const issue_refs = [...message.matchAll(regexp)].map(e => e[0])
+              if (issue_refs.length == 0) {
+                commits_without_issues.push({
+                  repo: repo,
+                  sha: commit.sha,
+                  message: message
+                })
+                return
+              }
+              issue_refs.forEach(issue_ref => {
+                if (issue_ref.startsWith('(')) {
+                  return
+                }
+                if (issue_ref.startsWith('intellum')) {
+                  let [owner_repo, issue_number] = issue_ref.split('#')
+                  issues.push({
+                    repo: owner_repo.split('/')[1],
+                    issue: issue_number
+                  })
+                } else {
+                  issues.push({
+                    repo: repo,
+                    issue: issue_ref.replace('#', '')
+                  })
+                }
+              })
             })
-            return commits
+            return {
+              issues: issues,
+              commits_without_issues: commits_without_issues
+            }
 
       - name: Release output
         run: echo data = '${{ toJSON(steps.release.outputs.result) }}'
