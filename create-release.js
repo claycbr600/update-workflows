@@ -35,7 +35,7 @@ module.exports = async ({github, context}) => {
   commits.forEach(commit => {
     let message = commit.commit.message
     let repo = context.repo.repo
-    const regexp = /(claycbr600\/[\w-]+)?\(?#\d+\)?/g
+    const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g
     const issue_refs = [...message.matchAll(regexp)].map(e => e[0])
 
     if (issue_refs.length == 0) {
@@ -52,7 +52,7 @@ module.exports = async ({github, context}) => {
         return
       }
 
-      if (issue_ref.startsWith('claycbr600')) {
+      if (issue_ref.startsWith('intellum')) {
         let [owner_repo, issue_number] = issue_ref.split('#')
         issues.push({
           repo: owner_repo.split('/')[1],
