@@ -49,7 +49,7 @@ jobs:
         id: release
         with:
           script: |
-            const script = require('./path/to/script.js')
+            const script = require('./create-release.js')
             script({github, context})
 
       - name: Release output
