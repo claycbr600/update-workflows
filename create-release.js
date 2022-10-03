@@ -33,7 +33,7 @@ module.exports = async ({github, context}) => {
   let commits_without_issues = []
   console.log(commits)
 
-  for (let commit in commits) {
+  for (commit in commits) {
     console.log('commit')
     console.log(commit)
     let message = commit.commit.message
@@ -50,7 +50,7 @@ module.exports = async ({github, context}) => {
       return
     }
 
-    for (let issue_ref in issue_refs) {
+    for (issue_ref in issue_refs) {
       if (issue_ref.startsWith('(')) {
         return
       }
