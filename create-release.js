@@ -52,7 +52,7 @@ module.exports = async ({github, context}) => {
         return
       }
 
-      if (issue_ref.startsWith('intellum')) {
+      if (issue_ref.startsWith('claycbr600')) {
         let [owner_repo, issue_number] = issue_ref.split('#')
         issues.push({
           repo: owner_repo.split('/')[1],
