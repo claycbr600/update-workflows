@@ -47,7 +47,7 @@ module.exports = async ({github, context}) => {
       return
     }
 
-    issue_refs.forEach(issue_ref => {
+    issue_refs.forEach(async issue_ref => {
       if (issue_ref.startsWith('(')) {
         return
       }
@@ -59,7 +59,7 @@ module.exports = async ({github, context}) => {
         let issue_number = issue_ref.replace('#', '')
       }
 
-      resp = github.rest.issues.get({
+      resp = await github.rest.issues.get({
         owner: context.repo.owner,
         repo: context.repo.repo,
         issue_number: issue_number
