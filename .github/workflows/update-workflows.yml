@@ -45,12 +45,13 @@ jobs:
         uses: actions/github-script@v5
         id: release
         with:
+          result-encoding: string
           script: |
             const resp = await github.rest.repos.getLatestRelease({
               owner: context.repo.owner,
               repo: context.repo.repo
             })
-            return resp.data
+            return resp.data.tag_name
 
       - name: Release output
-        run: echo data = '${{ toJSON(steps.release.outputs.result) }}'
+        run: echo data = '${{ steps.release.outputs.result }}'
