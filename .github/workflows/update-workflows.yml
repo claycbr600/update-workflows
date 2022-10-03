@@ -82,7 +82,7 @@ jobs:
               const issue_refs = [...message.matchAll(regexp)].map(e => e[0]);
               if (issue_refs.length == 0) {
                 commits_without_issues.push({
-                  repo: repo
+                  repo: repo,
                   sha: commit.sha,
                   message: message
                 })
@@ -100,7 +100,7 @@ jobs:
                   })
                 } else {
                   issues.push({
-                    repo: repo
+                    repo: repo,
                     issue: issue_ref.replace('#', '')
                   })
                 }
