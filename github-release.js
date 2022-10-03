@@ -4,6 +4,7 @@ module.exports = async ({ github, context }) => {
     repo: context.repo.repo
   })
   let tag_name = resp.data.tag_name
+  return tag_name
 
   // commit sha of latest release tag
   resp = await github.rest.git.listMatchingRefs({
