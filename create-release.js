@@ -66,12 +66,13 @@ module.exports = async ({github, context}) => {
         issue_number: issue_number
       })
       let issue = resp.data
-      console.log(resp.data)
+      console.log(issue.title)
 
       issues.push({
         title: issue.title,
         link: `* [${issue.title}](https://github.com/intellum/${repo}/issues/${issue_number})`
       })
+      console.log(issues)
     })
   })
 
