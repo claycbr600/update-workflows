@@ -77,42 +77,10 @@ jobs:
             const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g;
             let owner_repo = '${{ github.repository }}'
             let repo = owner_repo.split('/')[1]
-            console.log('here')
             commits.forEach(commit => {
-              let message = commit.message
-              console.log('here1')
-              const issue_refs = [...message.matchAll(regexp)].map(e => e[0])
-              console.log('here2')
-              if (issue_refs.length == 0) {
-                commits_without_issues.push({
-                  repo: repo,
-                  sha: commit.sha,
-                  message: message
-                })
-                return
-              }
-              issue_refs.forEach(issue_ref => {
-                if (issue_ref.startsWith('(')) {
-                  return
-                }
-                if (issue_ref.startsWith('intellum')) {
-                  let [owner_repo, issue_number] = issue_ref.split('#')
-                  issues.push({
-                    repo: owner_repo.split('/')[1],
-                    issue: issue_number
-                  })
-                } else {
-                  issues.push({
-                    repo: repo,
-                    issue: issue_ref.replace('#', '')
-                  })
-                }
-              })
+              console.log(commit.message)
             })
-            return {
-              issues: issues,
-              commits_without_issues: commits_without_issues
-            }
+            return commits
 
       - name: Release output
         run: echo data = '${{ toJSON(steps.release.outputs.result) }}'
