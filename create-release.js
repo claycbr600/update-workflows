@@ -1,4 +1,4 @@
-module.exports = ({github, context}) => {
+module.exports = async ({github, context}) => {
   let resp = await github.rest.repos.getLatestRelease({
     owner: context.repo.owner,
     repo: context.repo.repo
