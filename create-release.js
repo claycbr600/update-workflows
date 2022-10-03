@@ -35,13 +35,13 @@ module.exports = async ({github, context}) => {
   commits.forEach(commit => {
     let message = commit.commit.message
     let owner_repo = '${{ github.repository }}'
-    let repo = owner_repo.split('/')[1]
+    let repository = owner_repo.split('/')[1]
     const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g
     const issue_refs = [...message.matchAll(regexp)].map(e => e[0])
 
     if (issue_refs.length == 0) {
       commits_without_issues.push({
-        repo: repo,
+        repo: repository,
         sha: commit.sha,
         message: message
       })
@@ -61,7 +61,7 @@ module.exports = async ({github, context}) => {
         })
       } else {
         issues.push({
-          repo: repo,
+          repo: repository,
           issue: issue_ref.replace('#', '')
         })
       }
