@@ -33,7 +33,7 @@ module.exports = async ({github, context}) => {
   let commits_without_issues = []
   // console.log(commits)
 
-  commits.forEach(await (commit) => {
+  for (const commit of commits) {
     // console.log('commit')
     // console.log(commit)
     let message = commit.commit.message
@@ -51,6 +51,7 @@ module.exports = async ({github, context}) => {
     }
 
     issue_refs.forEach(async issue_ref => {
+    for (const issue_ref of issue_refs) {
       if (issue_ref.startsWith('(')) {
         return
       }
@@ -76,8 +77,8 @@ module.exports = async ({github, context}) => {
         link: `* [${issue.title}](https://github.com/intellum/${repo}/issues/${issue_number})`
       })
       console.log(issues)
-    })
-  })
+    }
+  }
 
   return {
     issues: issues,
