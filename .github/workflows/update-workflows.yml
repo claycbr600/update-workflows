@@ -51,10 +51,10 @@ jobs:
               repo: context.repo.repo
             })
             let tag_name = resp.data.tag_name
-            resp = await github.rest.git.getTag({
+            resp = await github.rest.git.listMatchingRefs({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_sha: tag_name
+              ref: `tags/${tag_name}`
             })
             return resp.data
 
