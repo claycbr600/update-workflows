@@ -1,8 +1,9 @@
 name: Update Workflows
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  push:
+    branches:
+    - main
 
 jobs:
   build:
@@ -61,19 +62,13 @@ jobs:
         id: github-release
         with:
           script: |
-            let resp = await github.rest.repos.listCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 1
-            })
-            let commit = resp.data.pop()
             const tag_version = "${{ steps.tag-version.outputs.result }}"
             await github.rest.git.createTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag: tag_version,
               message: `version ${tag_version}`,
-              object: commit.sha,
+              object: "${{ github.sha }}",
               type: "commit"
             })
             github.rest.repos.createRelease({
