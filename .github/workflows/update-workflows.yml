@@ -45,18 +45,22 @@ jobs:
         uses: actions/github-script@v5
         id: release
         with:
-          # result-encoding: string
           script: |
             let resp = await github.rest.repos.getLatestRelease({
               owner: context.repo.owner,
               repo: context.repo.repo
             })
-            let tag = resp.data.tag_name
-            resp = await github.rest.repos.listCommits({
+            let tag_name = resp.data.tag_name
+            let resp = await github.rest.git.getTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: tag
+              tag_sha: tag_name
             })
+            # resp = await github.rest.repos.listCommits({
+            #   owner: context.repo.owner,
+            #   repo: context.repo.repo,
+            #   sha: tag_name
+            # })
             return resp.data
 
       - name: Release output
