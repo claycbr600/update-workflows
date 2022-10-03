@@ -2,13 +2,16 @@ module.exports = async ({ github, context }) => {
   let resp, tag_name
 
   try {
+    console.log('here')
     resp = await github.rest.repos.getLatestRelease({
       owner: context.repo.owner,
       repo: context.repo.repo
     })
+    console.log('here2')
     tag_name = resp.data.tag_name
     return tag_name
   } catch (error) {
+    console.log('charlie error!')
     console.log(error)
   }
 
