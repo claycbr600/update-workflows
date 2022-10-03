@@ -1,5 +1,5 @@
 module.exports = async ({ github, context }) => {
-  let resp, tag_name
+  let resp, tag_name, commits
 
   try {
     console.log('here')
@@ -15,29 +15,37 @@ module.exports = async ({ github, context }) => {
     console.log(error)
   }
 
-  // commit sha of latest release tag
-  resp = await github.rest.git.listMatchingRefs({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    ref: `tags/${tag_name}`
-  })
-  let tag_commit_sha = resp.data[0].object.sha
+  if (tag_name) {
+    // commit sha of latest release tag
+    resp = await github.rest.git.listMatchingRefs({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      ref: `tags/${tag_name}`
+    })
+    let tag_commit_sha = resp.data[0].object.sha
 
-  resp = await github.rest.git.getCommit({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    commit_sha: tag_commit_sha
-  })
-  let release_commit = resp.data
+    resp = await github.rest.git.getCommit({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      commit_sha: tag_commit_sha
+    })
+    let release_commit = resp.data
 
-  // commits since latest release
-  resp = await github.rest.repos.listCommits({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    since: release_commit.author.date
-  })
-  let commits = resp.data
-  commits.pop()
+    // commits since latest release
+    resp = await github.rest.repos.listCommits({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      since: release_commit.author.date
+    })
+    commits = resp.data
+    commits.pop()
+  } else {
+    resp = await github.rest.repos.listCommits({
+      owner: context.repo.owner,
+      repo: context.repo.repo
+    })
+    commits = resp.data
+  }
 
   let issues = [], commits_without_issues = []
 
