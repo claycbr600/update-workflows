@@ -39,10 +39,10 @@ module.exports = async ({github, context}) => {
     const issue_refs = [...message.matchAll(regexp)].map(e => e[0])
 
     if (issue_refs.length == 0) {
+      let title = message.split('\n')[0]
       commits_without_issues.push({
-        repo: repo,
-        sha: commit.sha,
-        message: message.split('\n')[0]
+        title: issue.title,
+        link: `* [${issue.title}](https://github.com/intellum/${repo}/commit/${commit.sha})`
       })
       return
     }
@@ -54,16 +54,22 @@ module.exports = async ({github, context}) => {
 
       if (issue_ref.startsWith('intellum')) {
         let [owner_repo, issue_number] = issue_ref.split('#')
-        issues.push({
-          repo: owner_repo.split('/')[1],
-          issue: issue_number
-        })
+        repo = owner_repo.split('/')[1]
       } else {
-        issues.push({
-          repo: repo,
-          issue: issue_ref.replace('#', '')
-        })
+        let issue_number = issue_ref.replace('#', '')
       }
+
+      resp = await github.rest.issues.get({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        issue_number: issue_number
+      })
+      let issue = resp.data
+
+      issues.push({
+        title: issue.title,
+        link: `* [${issue.title}](https://github.com/intellum/${repo}/issues/${issue_number})`
+      })
     })
   })
 
