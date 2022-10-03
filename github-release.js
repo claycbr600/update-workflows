@@ -1,22 +1,22 @@
-module.exports = async ({github, context}) => {
+module.exports = async ({ github, context }) => {
   let resp = await github.rest.repos.getLatestRelease({
     owner: context.repo.owner,
     repo: context.repo.repo
   })
   let tag_name = resp.data.tag_name
 
-  // sha of latest release tag
+  // commit sha of latest release tag
   resp = await github.rest.git.listMatchingRefs({
     owner: context.repo.owner,
     repo: context.repo.repo,
     ref: `tags/${tag_name}`
   })
-  let tag_sha = resp.data[0].object.sha
+  let tag_commit_sha = resp.data[0].object.sha
 
   resp = await github.rest.git.getCommit({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    commit_sha: tag_sha
+    commit_sha: tag_commit_sha
   })
   let release_commit = resp.data
 
@@ -27,15 +27,11 @@ module.exports = async ({github, context}) => {
     since: release_commit.author.date
   })
   let commits = resp.data
-
   commits.pop()
-  let issues = []
-  let commits_without_issues = []
-  // console.log(commits)
+
+  let issues = [], commits_without_issues = []
 
   for (const commit of commits) {
-    // console.log('commit')
-    // console.log(commit)
     let message = commit.commit.message
     let repo = context.repo.repo
     const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g
@@ -47,14 +43,13 @@ module.exports = async ({github, context}) => {
         title: title,
         link: `* [${title}](https://github.com/intellum/${repo}/commit/${commit.sha})`
       })
-      return
+      continue
     }
 
     for (const issue_ref of issue_refs) {
       if (issue_ref.startsWith('(')) {
-        return
+        continue
       }
-      console.log('issue ref %s', issue_ref)
 
       if (issue_ref.startsWith('intellum')) {
         var [owner_repo, issue_number] = issue_ref.split('#')
@@ -69,18 +64,28 @@ module.exports = async ({github, context}) => {
         issue_number: issue_number
       })
       let issue = resp.data
-      console.log(issue.title)
 
       issues.push({
         title: issue.title,
         link: `* [${issue.title}](https://github.com/intellum/${repo}/issues/${issue_number})`
       })
-      console.log(issues)
     }
   }
 
-  return {
-    issues: issues,
-    commits_without_issues: commits_without_issues
+  let output = []
+  if (issues.length > 0) {
+    output = output.concat([
+      "\nIssues",
+      ...issues.map(issue => issue.link)
+    ])
   }
+
+  if (commits_without_issues.length > 0) {
+    output = output.concat([
+      "\nCommits without an issue number",
+      ...commits_without_issues.map(cwi => cwi.link)
+    ])
+  }
+
+  return output.join("\n")
 }
