@@ -59,7 +59,7 @@ module.exports = async ({github, context}) => {
         let issue_number = issue_ref.replace('#', '')
       }
 
-      resp = await github.rest.issues.get({
+      resp = github.rest.issues.get({
         owner: context.repo.owner,
         repo: context.repo.repo,
         issue_number: issue_number
