@@ -35,7 +35,7 @@ module.exports = async ({github, context}) => {
   commits.forEach(commit => {
     let message = commit.commit.message
     let repo = context.repo.repo
-    const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g
+    const regexp = /(claycbr600\/[\w-]+)?\(?#\d+\)?/g
     const issue_refs = [...message.matchAll(regexp)].map(e => e[0])
 
     if (issue_refs.length == 0) {
