@@ -1,10 +1,16 @@
 module.exports = async ({ github, context }) => {
-  let resp = await github.rest.repos.getLatestRelease({
-    owner: context.repo.owner,
-    repo: context.repo.repo
-  })
-  let tag_name = resp.data.tag_name
-  return tag_name
+  let resp, tag_name
+
+  try {
+    resp = await github.rest.repos.getLatestRelease({
+      owner: context.repo.owner,
+      repo: context.repo.repo
+    })
+    tag_name = resp.data.tag_name
+    return tag_name
+  } catch (error) {
+    console.log(error)
+  }
 
   // commit sha of latest release tag
   resp = await github.rest.git.listMatchingRefs({
