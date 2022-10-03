@@ -47,7 +47,7 @@ module.exports = async ({github, context}) => {
       return
     }
 
-    issue_refs.forEach(async issue_ref => {
+    for (let issue_ref in issue_refs) {
       if (issue_ref.startsWith('(')) {
         return
       }
@@ -73,7 +73,7 @@ module.exports = async ({github, context}) => {
         link: `* [${issue.title}](https://github.com/intellum/${repo}/issues/${issue_number})`
       })
       console.log(issues)
-    })
+    }
   })
 
   return {
