@@ -28,7 +28,7 @@ module.exports = async ({github, context}) => {
   })
   let commits = resp.data
 
-  commits.pop()
+  await commits.pop()
   let issues = []
   let commits_without_issues = []
   console.log(commits)
