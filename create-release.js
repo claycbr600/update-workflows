@@ -48,10 +48,10 @@ module.exports = async ({github, context}) => {
     }
 
     issue_refs.forEach(async issue_ref => {
-      console.log('issue ref %s', issue_ref)
       if (issue_ref.startsWith('(')) {
         return
       }
+      console.log('issue ref %s', issue_ref)
 
       if (issue_ref.startsWith('intellum')) {
         var [owner_repo, issue_number] = issue_ref.split('#')
@@ -66,6 +66,7 @@ module.exports = async ({github, context}) => {
         issue_number: issue_number
       })
       let issue = resp.data
+      console.log(resp.data)
 
       issues.push({
         title: issue.title,
