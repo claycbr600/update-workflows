@@ -50,7 +50,7 @@ jobs:
         with:
           script: |
             const script = require('./create-release.js')
-            script({github, context})
+            return script({github, context})
 
       - name: Release output
         run: echo data = '${{ toJSON(steps.release.outputs.result) }}'
