@@ -31,8 +31,11 @@ module.exports = async ({github, context}) => {
   commits.pop()
   let issues = []
   let commits_without_issues = []
+  console.log(commits)
 
   for (let commit in commits) {
+    console.log('commit')
+    console.log(commit)
     let message = commit.commit.message
     let repo = context.repo.repo
     const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g
