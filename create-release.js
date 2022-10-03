@@ -45,6 +45,7 @@ module.exports = async ({github, context}) => {
         sha: commit.sha,
         message: message
       })
+      console.log("repo: %s", repository)
       return
     }
 
