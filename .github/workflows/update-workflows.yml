@@ -60,7 +60,7 @@ jobs:
             resp = await github.rest.git.getCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: tag_sha
+              commit_sha: tag_sha
             })
             let commit = resp.data
             resp = await github.rest.repos.listCommits({
