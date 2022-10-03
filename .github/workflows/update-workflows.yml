@@ -51,10 +51,32 @@ jobs:
         uses: actions/github-script@v5
         id: release-info
         with:
-          # result-encoding: string
+          result-encoding: string
           script: |
             const script = require('./github-release.js')
             return script({ github, context })
 
       - name: Release output
         run: echo data = '${{ toJSON(steps.release-info.outputs.result) }}'
+
+      - name: Create github release
+        uses: actions/github-script@v5
+        id: github-release
+        with:
+          script: |
+            const tag_version = "${{ steps.tag-version.outputs.result }}"
+            await github.rest.git.createTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: tag_version,
+              message: `version ${tag_version}`,
+              object: "${{ github.sha }}",
+              type: "commit"
+            })
+            github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag_version,
+              name: `Version ${tag_version}`,
+              body: `${{ steps.release-info.outputs.result }}`
+            })
