@@ -42,7 +42,7 @@ module.exports = async ({github, context}) => {
       commits_without_issues.push({
         repo: repo,
         sha: commit.sha,
-        message: message
+        message: message.split('\n')[0]
       })
       return
     }
@@ -55,7 +55,7 @@ module.exports = async ({github, context}) => {
       if (issue_ref.startsWith('intellum')) {
         let [owner_repo, issue_number] = issue_ref.split('#')
         issues.push({
-          repository: owner_repo.split('/')[1],
+          repo: owner_repo.split('/')[1],
           issue: issue_number
         })
       } else {
