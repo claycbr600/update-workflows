@@ -76,10 +76,10 @@ jobs:
             let commits_without_issues = []
             const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g;
             let owner_repo = '${{ github.repository }}'
-            let repo = owner_repo.split('/')[1],
+            let repo = owner_repo.split('/')[1]
             commits.forEach(commit => {
               let message = commit.message
-              const issue_refs = [...message.matchAll(regexp)].map(e => e[0]);
+              const issue_refs = [...message.matchAll(regexp)].map(e => e[0])
               if (issue_refs.length == 0) {
                 commits_without_issues.push({
                   repo: repo,
