@@ -56,6 +56,18 @@ jobs:
               repo: context.repo.repo,
               ref: `tags/${tag_name}`
             })
+            let tag_sha = resp.data[0].object.sha
+            resp = await github.rest.git.getCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: tag_sha
+            })
+            let commit = resp.data
+            resp = await github.rest.repos.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              since: commit.author.date
+            })
             return resp.data
 
       - name: Release output
