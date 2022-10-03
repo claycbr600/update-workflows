@@ -32,7 +32,7 @@ module.exports = async ({github, context}) => {
   let issues = []
   let commits_without_issues = []
 
-  commits.forEach(async commit => {
+  for (let commit in commits) {
     let message = commit.commit.message
     let repo = context.repo.repo
     const regexp = /(intellum\/[\w-]+)?\(?#\d+\)?/g
@@ -74,7 +74,7 @@ module.exports = async ({github, context}) => {
       })
       console.log(issues)
     }
-  })
+  }
 
   return {
     issues: issues,
