@@ -63,9 +63,9 @@ module.exports = async ({ github, context }) => {
 
     if (issue_refs.length == 0) {
       let title = message.split('\n')[0]
-      commits_without_issues.push({
+      commits_without_issues.push(
         `* [${title}](https://github.com/intellum/${repo}/commit/${commit.sha})`
-      })
+      )
       continue
     }
 
@@ -88,9 +88,9 @@ module.exports = async ({ github, context }) => {
       })
       let issue = resp.data
 
-      issues.push({
+      issues.push(
         `* [${issue.title}](https://github.com/intellum/${repo}/issues/${issue_number})`
-      })
+      )
     }
   }
 
