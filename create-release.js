@@ -1,19 +1,19 @@
-module.exports = async ({github, context}) => {
-  let resp = await github.rest.repos.getLatestRelease({
+module.exports = ({github, context}) => {
+  let resp = github.rest.repos.getLatestRelease({
     owner: context.repo.owner,
     repo: context.repo.repo
   })
   let tag_name = resp.data.tag_name
 
   // sha of latest release tag
-  resp = await github.rest.git.listMatchingRefs({
+  resp = github.rest.git.listMatchingRefs({
     owner: context.repo.owner,
     repo: context.repo.repo,
     ref: `tags/${tag_name}`
   })
   let tag_sha = resp.data[0].object.sha
 
-  resp = await github.rest.git.getCommit({
+  resp = github.rest.git.getCommit({
     owner: context.repo.owner,
     repo: context.repo.repo,
     commit_sha: tag_sha
@@ -21,14 +21,14 @@ module.exports = async ({github, context}) => {
   let release_commit = resp.data
 
   // commits since latest release
-  resp = await github.rest.repos.listCommits({
+  resp = github.rest.repos.listCommits({
     owner: context.repo.owner,
     repo: context.repo.repo,
     since: release_commit.author.date
   })
   let commits = resp.data
 
-  await commits.pop()
+  commits.pop()
   let issues = []
   let commits_without_issues = []
   // console.log(commits)
@@ -63,7 +63,7 @@ module.exports = async ({github, context}) => {
         var issue_number = issue_ref.replace('#', '')
       }
 
-      resp = await github.rest.issues.get({
+      resp = github.rest.issues.get({
         owner: context.repo.owner,
         repo: context.repo.repo,
         issue_number: issue_number
