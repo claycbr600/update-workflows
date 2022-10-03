@@ -51,7 +51,7 @@ jobs:
               repo: context.repo.repo
             })
             let tag_name = resp.data.tag_name
-            # sha of latest release tag
+            // sha of latest release tag
             resp = await github.rest.git.listMatchingRefs({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -64,7 +64,7 @@ jobs:
               commit_sha: tag_sha
             })
             let release_commit = resp.data
-            # commits since latest release
+            // commits since latest release
             resp = await github.rest.repos.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
