@@ -1,5 +1,5 @@
 module.exports = ({github, context}) => {
-  let resp = github.rest.repos.getLatestRelease({
+  let resp = await github.rest.repos.getLatestRelease({
     owner: context.repo.owner,
     repo: context.repo.repo
   })
