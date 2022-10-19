@@ -1,23 +1,18 @@
 name: Action Test
 
 inputs:
-  weather:
+  repos:
     required: false
-    default: qa-envs-1
+    default: "['developer-portal','intellum-ecommerce','evolve','exceed','level','portal','tribe','hal-9000','devops']"
 
 runs:
   using: composite
 
   steps:
-    - name: Dump GitHub context
-      shell: bash
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: |
-        echo -e "\033[31;1;4mDump GitHub context\033[0m"
-        echo -e "$GITHUB_CONTEXT\n"
-
-    - name: app_name
-      shell: bash
-      run: |
-        echo app_name = ${{ inputs.app_name }}
+    - name: Input test
+      uses: actions/github-script@v5
+      id: input-test
+      with:
+        script: |
+          const repos = ${{ fromJSON(inputs.repos) }}
+          console.log("repos = %o", repos)
