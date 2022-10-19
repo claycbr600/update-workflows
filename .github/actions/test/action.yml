@@ -15,4 +15,5 @@ runs:
       with:
         script: |
           const repos = ${{ fromJSON(inputs.repos) }}
+          console.log('includes evolve = %s', repos.include('evolve'))
           console.log("repos = %o", repos)
