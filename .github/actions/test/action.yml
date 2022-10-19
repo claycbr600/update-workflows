@@ -17,4 +17,4 @@ runs:
           let repos = '${{ inputs.repos }}'
           repos = JSON.parse(repos)
           console.log(repos)
-          console.log('includes evolve = %s', repos.indexOf('evolve') != -1)
+          console.log('includes charlie = %s', repos.indexOf('charlie') != -1)
