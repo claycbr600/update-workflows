@@ -1,20 +1,28 @@
-name: Action Test
+name: Close Issue
 
 inputs:
-  repos:
-    required: false
-    default: '["developer-portal","intellum-ecommerce","evolve","exceed","level","portal","tribe","hal-9000","devops"]'
+  commit:
+    description: 'Commit sha of release tag'
+    required: true
 
 runs:
   using: composite
 
   steps:
-    - name: Input test
+    - name: Get release tag
       uses: actions/github-script@v5
-      id: input-test
+      id: release-tag
       with:
+        result-encoding: string
         script: |
-          let repos = '${{ inputs.repos }}'
-          repos = JSON.parse(repos)
-          console.log(repos)
-          console.log('includes charlie = %s', repos.indexOf('charlie') != -1)
+          const resp = await github.rest.git.getTag({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag_sha: "${{ inputs.commit }}"
+          })
+          console.log(resp.data)
+          return resp.data.tag
+
+    - name: print release tag
+      shell: bash
+      run: echo "tag = ${{ steps.release-tag.outputs.result }}"
