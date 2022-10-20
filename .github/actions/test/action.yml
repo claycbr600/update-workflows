@@ -16,7 +16,7 @@ runs:
         result-encoding: string
         script: |
           const commit_sha = "${{ inputs.commit_sha }}"
-          const resp = await octokit.rest.repos.listTags({
+          const resp = await github.rest.repos.listTags({
             owner: context.repo.owner,
             repo: context.repo.repo
           });
