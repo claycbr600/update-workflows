@@ -1,23 +1,35 @@
-name: Action Test
+name: Close Issue
 
 inputs:
-  weather:
-    required: false
-    default: qa-envs-1
+  commit_sha:
+    description: 'Commit sha of release tag'
+    required: true
 
 runs:
   using: composite
 
   steps:
-    - name: Dump GitHub context
-      shell: bash
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: |
-        echo -e "\033[31;1;4mDump GitHub context\033[0m"
-        echo -e "$GITHUB_CONTEXT\n"
+    - name: Get release tag
+      uses: actions/github-script@v5
+      id: release-tag
+      with:
+        result-encoding: string
+        script: |
+          const commit_sha = "${{ inputs.commit_sha }}"
+          const resp = await octokit.rest.repos.listTags({
+            owner: context.repo.owner,
+            repo: context.repo.repo
+          });
+          const tags = resp.data
+          for (const tag of tags) {
+            if (tag.commit.sha == commit_sha) {
+              console.log("found tag %s for commit %s", tag.name, commit_sha)
+              return tag.name
+            } else {
+              console.log("skipping tag %s with commit %s", tag.name, tag.commit.sha)
+            }
+          }
 
-    - name: app_name
+    - name: print release tag
       shell: bash
-      run: |
-        echo app_name = ${{ inputs.app_name }}
+      run: echo "tag = ${{ steps.release-tag.outputs.result }}"
