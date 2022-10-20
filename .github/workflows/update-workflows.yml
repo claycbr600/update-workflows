@@ -25,3 +25,4 @@ jobs:
           echo "::set-output name=today::$date"
 
       - uses: ./.github/actions/test
+        commit: 7698a9b9d075de2a4f6feaccd5974b4df53bac88
