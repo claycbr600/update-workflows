@@ -1,7 +1,7 @@
 name: Close Issue
 
 inputs:
-  commit:
+  commit_sha:
     description: 'Commit sha of release tag'
     required: true
 
@@ -15,13 +15,20 @@ runs:
       with:
         result-encoding: string
         script: |
-          const resp = await github.rest.git.getTag({
+          const commit_sha = "${{ inputs.commit_sha }}"
+          const resp = await octokit.rest.repos.listTags({
             owner: context.repo.owner,
-            repo: context.repo.repo,
-            tag_sha: "${{ inputs.commit }}"
-          })
-          console.log(resp.data)
-          return resp.data.tag
+            repo: context.repo.repo
+          });
+          const tags = resp.data
+          for (const tag of tags) {
+            if (tag.commit.sha == commit_sha) {
+              console.log("found tag %s for commit %s", tag.name, commit_sha)
+              return tag.name
+            } else {
+              console.log("skipping tag %s with commit %s", tag.name, tag.commit.sha)
+            }
+          }
 
     - name: print release tag
       shell: bash
