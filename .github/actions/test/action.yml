@@ -4,12 +4,15 @@ inputs:
   commit_sha:
     description: 'Commit sha of release tag'
     required: true
+  token:
+    description: 'Personal access token'
+    required: true
 
 runs:
   using: composite
 
   steps:
-    - name: Get release tag
+    - name: Get release tag from commit
       uses: actions/github-script@v5
       id: release-tag
       with:
@@ -19,17 +22,41 @@ runs:
           const resp = await github.rest.repos.listTags({
             owner: context.repo.owner,
             repo: context.repo.repo
-          });
+          })
           const tags = resp.data
           for (const tag of tags) {
             if (tag.commit.sha == commit_sha) {
-              console.log("found tag %s for commit %s", tag.name, commit_sha)
               return tag.name
-            } else {
-              console.log("skipping tag %s with commit %s", tag.name, tag.commit.sha)
             }
           }
 
     - name: print release tag
       shell: bash
       run: echo "tag = ${{ steps.release-tag.outputs.result }}"
+
+    - name: Close release issues
+      uses: actions/github-script@v5
+      id: issues
+      with:
+        github-token: ${{ inputs.token }}
+        script: |
+          const tag = "${{ steps.release-tag.outputs.result }}"
+          const resp = await github.rest.repos.getReleaseByTag({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag: tag
+          })
+          const body = resp.data.body
+          const regexp = /intellum\/[\w-]+\/issues\/\d+/g
+          const issues = [...body.matchAll(regexp)].map(e => e[0])
+          for (let issue of issues) {
+            issue = issue.split('/')
+            let repo = issue[1]
+            let issue_number = issue[3]
+            github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: repo,
+              issue_number: issue_number,
+              state: "closed"
+            })
+          }
