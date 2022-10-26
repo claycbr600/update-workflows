@@ -40,7 +40,7 @@ runs:
       run: echo "tag = ${{ steps.release-tag.outputs.result }}"
 
     - name: dry run param test
-      if: inputs.dry_run
+      if: fromJSON(inputs.dry_run)
       shell: bash
       run: echo dry run here!
 
