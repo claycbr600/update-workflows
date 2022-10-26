@@ -1,11 +1,8 @@
 name: Update Workflows
 
 on:
-  push:
-    branches:
-    - main
-  pull_request:
-    types: [opened, synchronize]
+  repository_dispatch:
+    types: [auto-close-issues]
 
 jobs:
   build:
@@ -26,6 +23,6 @@ jobs:
 
       - uses: ./.github/actions/test
         with:
-          commit_sha: 7698a9b9d075de2a4f6feaccd5974b4df53bac88
+          commit_sha: ${{ github.event.client_payload.commit_sha }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          dry_run: ''
+          dry_run: ${{ github.event.client_payload.dry_run }}
