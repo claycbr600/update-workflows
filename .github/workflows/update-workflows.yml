@@ -25,4 +25,3 @@ jobs:
         with:
           commit_sha: ${{ github.event.client_payload.commit_sha }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          dry_run: ${{ github.event.client_payload.dry_run }}
