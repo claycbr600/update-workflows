@@ -7,6 +7,11 @@ inputs:
   token:
     description: 'Personal access token'
     required: true
+  dry_run:
+    description: 'Only print issues to close'
+    type: boolean
+    required: false
+    default: false
 
 runs:
   using: composite
@@ -34,6 +39,11 @@ runs:
       shell: bash
       run: echo "tag = ${{ steps.release-tag.outputs.result }}"
 
+    - name: dry run param test
+      if: inputs.dry_run
+      shell: bash
+      run: echo dry run here!
+
     - name: Close release issues
       uses: actions/github-script@v5
       id: issues
@@ -41,6 +51,8 @@ runs:
         github-token: ${{ inputs.token }}
         script: |
           const tag = "${{ steps.release-tag.outputs.result }}"
+          const dry_run = ${{ inputs.dry_run }}
+          console.log(`dry_run = ${dry_run}`)
           const resp = await github.rest.repos.getReleaseByTag({
             owner: context.repo.owner,
             repo: context.repo.repo,
@@ -53,6 +65,10 @@ runs:
             issue = issue.split('/')
             let repo = issue[1]
             let issue_number = issue[3]
+            console.log(`closing issue intellum/${repo}#${issue_number}`)
+            if (dry_run) {
+              continue
+            }
             github.rest.issues.update({
               owner: context.repo.owner,
               repo: repo,
