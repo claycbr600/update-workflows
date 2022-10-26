@@ -39,10 +39,15 @@ runs:
       shell: bash
       run: echo "tag = ${{ steps.release-tag.outputs.result }}"
 
-    - name: dry run param test
-      if: fromJSON(inputs.dry_run)
+    - name: Set dry run param
+      id: dry-run
       shell: bash
-      run: echo dry run here!
+      run: |
+        dry_run=${{ inputs.dry_run || false }}
+        echo "::set-output name=result::$dry_run"
+        if $dry_run; then
+          echo "dry_run enabled"
+        fi
 
     - name: Close release issues
       uses: actions/github-script@v5
@@ -51,7 +56,7 @@ runs:
         github-token: ${{ inputs.token }}
         script: |
           const tag = "${{ steps.release-tag.outputs.result }}"
-          const dry_run = ${{ inputs.dry_run }}
+          const dry_run = ${{ steps.dry-run.outputs.result }}
           console.log(`dry_run = ${dry_run}`)
           const resp = await github.rest.repos.getReleaseByTag({
             owner: context.repo.owner,
