@@ -1,11 +1,11 @@
-name: Close Issue
+name: Close Issues
 
 on:
   repository_dispatch:
     types: [auto-close-issues]
 
 jobs:
-  build:
+  close-issues:
     runs-on: ubuntu-latest
 
     steps:
