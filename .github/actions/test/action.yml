@@ -79,7 +79,7 @@ runs:
               continue
             } else {
               console.log(message)
-              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, content)
+              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, message)
               github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: repo,
