@@ -74,7 +74,7 @@ runs:
             issue = issue.split('/')
             let repo = issue[1]
             let issue_number = issue[3]
-            let message = `closing issue claycbr600/${repo}#${issue_number}\n`
+            let message = `closing claycbr600/${repo}#${issue_number}\n`
             if (dry_run) {
               message = `**dry_run enabled** skip ${message}`
             } else {
