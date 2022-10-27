@@ -1,4 +1,4 @@
-name: Update Workflows
+name: Close Issue
 
 on:
   repository_dispatch:
