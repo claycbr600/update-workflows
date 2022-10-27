@@ -75,11 +75,19 @@ runs:
             if (dry_run) {
               let content = `dry_run enabled, skip ${message}`
               console.log(content)
-              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, content)
+              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, content, err => {
+                if (err) {
+                  console.error(err);
+                }
+              })
               continue
             } else {
               console.log(message)
-              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, message)
+              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, message, err => {
+                if (err) {
+                  console.error(err);
+                }
+              })
               github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: repo,
