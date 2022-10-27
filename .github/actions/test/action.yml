@@ -40,7 +40,7 @@ runs:
       run: |
         tag_name="${{ steps.release-tag.outputs.result }}"
         commit_sha="${{ inputs.commit_sha }}"
-        echo "$tag_name ($commit_sha)" >> $GITHUB_STEP_SUMMARY
+        echo "## $tag_name ($commit_sha)" >> $GITHUB_STEP_SUMMARY
 
     - name: Set dry run param
       id: dry-run
@@ -76,21 +76,8 @@ runs:
             let issue_number = issue[3]
             let message = `closing issue claycbr600/${repo}#${issue_number}\n`
             if (dry_run) {
-              let content = `dry_run enabled, skip ${message}`
-              console.log(content)
-              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, content, err => {
-                if (err) {
-                  console.error(err);
-                }
-              })
-              continue
+              message = `*dry_run enabled* skip ${message}`
             } else {
-              console.log(message)
-              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, message, err => {
-                if (err) {
-                  console.error(err);
-                }
-              })
               github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: repo,
@@ -98,4 +85,10 @@ runs:
                 state: "closed"
               })
             }
+            console.log(message)
+            fs.appendFile(process.env.GITHUB_STEP_SUMMARY, message, err => {
+              if (err) {
+                console.error(err);
+              }
+            })
           }
