@@ -55,6 +55,7 @@ runs:
       with:
         github-token: ${{ inputs.token }}
         script: |
+          const fs = require('fs');
           const tag = "${{ steps.release-tag.outputs.result }}"
           const dry_run = ${{ steps.dry-run.outputs.result }}
           console.log(`dry_run = ${dry_run}`)
@@ -70,14 +71,20 @@ runs:
             issue = issue.split('/')
             let repo = issue[1]
             let issue_number = issue[3]
-            console.log(`closing issue intellum/${repo}#${issue_number}`)
+            let message = `closing issue intellum/${repo}#${issue_number}`
             if (dry_run) {
+              let content = `dry_run enabled, skip ${message}`
+              console.log(content)
+              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, content)
               continue
+            } else {
+              console.log(message)
+              fs.appendFile(process.env.GITHUB_STEP_SUMMARY, content)
+              github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: repo,
+                issue_number: issue_number,
+                state: "closed"
+              })
             }
-            github.rest.issues.update({
-              owner: context.repo.owner,
-              repo: repo,
-              issue_number: issue_number,
-              state: "closed"
-            })
           }
