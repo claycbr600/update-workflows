@@ -1,8 +1,12 @@
 name: Close Issues
 
 on:
-  repository_dispatch:
-    types: [auto-close-issues]
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        required: true
+      dry_run:
+        required: false
 
 jobs:
   close-issues:
@@ -23,6 +27,6 @@ jobs:
 
       - uses: ./.github/actions/test
         with:
-          commit_sha: ${{ github.event.client_payload.commit_sha }}
+          commit_sha: ${{ inputs.commit_sha }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          dry_run: ${{ github.event.client_payload.dry_run }}
+          dry_run: ${{ inputs.dry_run }}
