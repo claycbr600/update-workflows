@@ -40,7 +40,7 @@ runs:
       run: |
         tag_name="${{ steps.release-tag.outputs.result }}"
         commit_sha="${{ inputs.commit_sha }}"
-        echo "### $tag_name ($commit_sha)" >> $GITHUB_STEP_SUMMARY
+        echo "#### $tag_name ($commit_sha)" >> $GITHUB_STEP_SUMMARY
 
     - name: Set dry run param
       id: dry-run
