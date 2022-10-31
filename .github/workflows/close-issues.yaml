@@ -2,11 +2,7 @@ name: Close Issues
 
 on:
   repository_dispatch:
-    inputs:
-      commit_sha:
-        required: true
-      dry_run:
-        required: false
+    types: [auto-close-issues]
 
 jobs:
   close-issues:
@@ -27,6 +23,6 @@ jobs:
 
       - uses: ./.github/actions/test
         with:
-          commit_sha: ${{ inputs.commit_sha }}
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          dry_run: ${{ inputs.dry_run }}
+          commit_sha: ${{ github.event.client_payload.commit_sha }}
+          token: ${{ secrets.LILYCORN_GITHUB_TOKEN }}
+          dry_run: ${{ github.event.client_payload.dry_run }}
