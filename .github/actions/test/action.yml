@@ -74,13 +74,13 @@ runs:
             tag: tag
           })
           const body = resp.data.body
-          const regexp = /intellum\/[\w-]+\/issues\/\d+/g
+          const regexp = /claycbr600\/[\w-]+\/issues\/\d+/g
           const issues = [...body.matchAll(regexp)].map(e => e[0])
           for (let issue of issues) {
             issue = issue.split('/')
             let repo = issue[1]
             let issue_number = issue[3]
-            let message = `closing intellum/${repo}#${issue_number}\n`
+            let message = `closing claycbr600/${repo}#${issue_number}\n`
             if (dry_run) {
               message = `**dry_run enabled** skip ${message}`
             } else {
