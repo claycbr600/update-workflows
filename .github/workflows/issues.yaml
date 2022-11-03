@@ -1,0 +1,14 @@
+name: Enforce Issue Estimation
+on:
+  issues:
+    types:
+      - closed
+jobs:
+  add-comment:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Dump GitHub context
+        run: echo '${{ toJSON(github) }}'
