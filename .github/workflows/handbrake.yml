@@ -3,16 +3,26 @@ on:
   workflow_dispatch:
     inputs:
       clusters:
-        description: 'comma separated list of cluster_stacks - ex primary_staging'
-        required: true
+        description: 'comma separated list of cluster_stacks - ex primary_staging,europe_production'
         type: string
+        required: false
+      reset:
+        description: 'clear handbrake config'
+        type: boolean
+        required: false
 
 jobs:
-  build-release:
+  handbrake:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Reset handbrake
+        if: inputs.reset
+        run: |
+          echo reset handbrake config
+
       - name: Check out repository code
+        if: !inputs.reset
         run: |
           clusters=${{ inputs.clusters }}
           echo clusters input count = ${#clusters}
