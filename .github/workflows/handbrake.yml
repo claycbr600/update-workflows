@@ -22,7 +22,7 @@ jobs:
           echo reset handbrake config
 
       - name: Check out repository code
-        if: !inputs.reset
+        if: ${{ !inputs.reset }}
         run: |
           clusters=${{ inputs.clusters }}
           echo clusters input count = ${#clusters}
