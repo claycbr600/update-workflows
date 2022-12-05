@@ -1,0 +1,18 @@
+name: Handbrake
+on:
+  workflow_dispatch:
+    inputs:
+      clusters:
+        description: 'comma separated list of cluster_stacks - ex primary_staging'
+        required: true
+        type: string
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        run: |
+          clusters=${{ inputs.clusters }}
+          echo clusters input count = ${#clusters}
