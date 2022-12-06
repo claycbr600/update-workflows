@@ -70,8 +70,17 @@ jobs:
         run: |
           cat .intellum.yml
 
-      - name: Push changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: ./.intellum.yml
-          message: "handbrake [skip ci]"
+      - name: heredoc
+        run: |
+          result=$(cat <<-"EOF"
+          version `0.2.11`
+          quotes 'test'
+          EOF
+          )
+          echo $result
+
+      # - name: Push changes
+      #   uses: EndBug/add-and-commit@v9
+      #   with:
+      #     add: ./.intellum.yml
+      #     message: "handbrake [skip ci]"
