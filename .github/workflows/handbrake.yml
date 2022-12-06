@@ -66,26 +66,16 @@ jobs:
           cmd: |
             json='${{ steps.handbrake-config.outputs.result }}'
             result=$(echo $json | yq -P)
-            echo $result
-
-      - name: Output handbrake
-        run: |
-          cat > .intellum.yml <<-EOF
-          ${{ steps.handbrake.outputs.result }}
-          EOF
+            echo $result > /tmp/result.yml
+            cat /tmp/result.yml
+            echo $json | yq -P > ./.intellum.yml
 
       - name: Output yaml file
         run: |
           cat .intellum.yml
 
-      - name: debug
-        run: |
-          git status
-          git diff
-          echo "github repo = $GITHUB_REPOSITORY"
-
-      - name: Push changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: ./.intellum.yml
-          message: "handbrake [skip ci]"
+      # - name: Push changes
+      #   uses: EndBug/add-and-commit@v9
+      #   with:
+      #     add: ./.intellum.yml
+      #     message: "handbrake [skip ci]"
