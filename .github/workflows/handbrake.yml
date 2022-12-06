@@ -76,10 +76,11 @@ jobs:
           version `0.2.11`
           quotes 'test'
           EOF
-          echo "echo result"
-          echo $result
-          echo "printf result"
-          printf "%s\n" "$result"
+
+          # echo "echo result"
+          # echo $result
+          # echo "printf result"
+          # printf "%s\n" "$result"
 
       # - name: Push changes
       #   uses: EndBug/add-and-commit@v9
