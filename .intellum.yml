@@ -1,15 +1,1 @@
-app: developer-portal
-env_vars:
-  kms_key_id: alias/developer-portal
-  secrets:
-    - DB_PASSWORD
-    - RAILS_SECRET_TOKEN
-deployments:
-  primary:
-    - production
-    - staging
-  local:
-    - development
-handbrake:
-  primary:
-    - staging
+app: developer-portal env_vars: kms_key_id: alias/developer-portal secrets: - DB_PASSWORD - RAILS_SECRET_TOKEN deployments: primary: - production - staging local: - development handbrake: primary: - production
