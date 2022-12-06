@@ -72,7 +72,7 @@ jobs:
 
       - name: heredoc
         run: |
-          read -r -d '' result << "EOF"
+          read -r -d '' result <<"EOF"
           version `0.2.11`
           quotes 'test'
           EOF
