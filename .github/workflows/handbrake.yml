@@ -19,8 +19,6 @@ jobs:
 
       - name: Check out repository code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Read intellum yaml as json
         id: intellum-yaml
@@ -86,12 +84,8 @@ jobs:
           git diff
           echo "github repo = $GITHUB_REPOSITORY"
 
-      - name: Commit changes
-        run: |
-          git commit -a -m "handbrake [skip ci]"
-
-      - name: push changes
-        uses: ad-m/github-push-action@master
+      - name: Push changes
+        uses: EndBug/add-and-commit@v9
         with:
-          repository: ${{ github.repository }}
-          branch: ${{ github.ref }}
+          add: ./.intellum.yml
+          message: "handbrake [skip ci]"
