@@ -78,7 +78,7 @@ jobs:
         run: |
           cat .intellum.yml
 
-      # - name: Push changes
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     branch: ${{ github.ref }}
+      - name: push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: ${{ github.ref }}
