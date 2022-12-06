@@ -86,6 +86,10 @@ jobs:
           git diff
           echo "github repo = $GITHUB_REPOSITORY"
 
+      - name: Commit changes
+        run: |
+          git commit -a -m "handbrake [skip ci]"
+
       - name: push changes
         uses: ad-m/github-push-action@master
         with:
