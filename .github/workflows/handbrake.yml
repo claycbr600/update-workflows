@@ -80,7 +80,14 @@ jobs:
         run: |
           cat .intellum.yml
 
+      - name: debug
+        run: |
+          git status
+          git diff
+          echo "github repo = $GITHUB_REPOSITORY"
+
       - name: push changes
         uses: ad-m/github-push-action@master
         with:
+          repository: ${{ github.repository }}
           branch: ${{ github.ref }}
