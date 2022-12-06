@@ -60,22 +60,18 @@ jobs:
             return json
 
       - name: Convert to yaml
-        id: handbrake
         uses: intellum/yq@v4.27.3
         with:
           cmd: |
             json='${{ steps.handbrake-config.outputs.result }}'
-            result=$(echo $json | yq -P)
-            echo $result > /tmp/result.yml
-            cat /tmp/result.yml
             echo $json | yq -P > ./.intellum.yml
 
       - name: Output yaml file
         run: |
           cat .intellum.yml
 
-      # - name: Push changes
-      #   uses: EndBug/add-and-commit@v9
-      #   with:
-      #     add: ./.intellum.yml
-      #     message: "handbrake [skip ci]"
+      - name: Push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: ./.intellum.yml
+          message: "handbrake [skip ci]"
