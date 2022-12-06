@@ -22,7 +22,7 @@ jobs:
         uses: intellum/yq@v4.27.3
         with:
           cmd: |
-            result=$(yq 'del(.handbrake)' .intellum.yml)
+            yq 'del(.handbrake)' .intellum.yml
 
       - name: Output handbrake reset
         run: |
