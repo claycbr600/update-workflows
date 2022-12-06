@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Dump GitHub context
+        run: echo '${{ toJSON(github) }}'
+
       - name: Check out repository code
         uses: actions/checkout@v2
 
@@ -74,3 +77,8 @@ jobs:
       - name: Output yaml file
         run: |
           cat .intellum.yml
+
+      # - name: Push changes
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     branch: ${{ github.ref }}
