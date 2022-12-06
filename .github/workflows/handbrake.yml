@@ -17,17 +17,58 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Reset handbrake
-        id: reset-handbrake
+      - name: Read intellum yaml as json
+        id: intellum-yaml
         uses: intellum/yq@v4.27.3
         with:
           cmd: |
-            yq 'del(.handbrake)' .intellum.yml
+            result=$(yq -o=json -I=0 ./.intellum.yml)
+            echo $result
 
-      - name: Output handbrake reset
+      - name: Configure handbrake
+        id: handbrake-config
+        uses: actions/github-script@v5
+        with:
+          script: |
+            function addToHandbrake(cluster_stack, data) {
+              const i = cluster_stack.lastIndexOf("_")
+              const cluster = cluster_stack.slice(0, i)
+              const stack = cluster_stack.slice(i + 1)
+
+              if (!data.handbrake) data.handbrake = {}
+              if (!data.handbrake[cluster]) data.handbrake[cluster] = []
+
+              data.handbrake[cluster].push(stack)
+            }
+
+            const jsonStr = '${{ steps.intellum-yaml.outputs.result }}'
+            let json = JSON.parse(jsonStr)
+            delete json["handbrake"]
+
+            const handbrake = {
+              primary_staging: ${{ inputs.primary_staging }},
+              primary_production: ${{ inputs.primary_production }}
+            }
+
+            for (const [key, value] of Object.entries(handbrake)) {
+              if (value) addToHandbrake(key, json)
+            }
+
+            return json
+
+      - name: Convert to yaml
+        id: handbrake
+        uses: intellum/yq@v4.27.3
+        with:
+          cmd: |
+            json='${{ steps.handbrake-config.outputs.result }}'
+            result=$(echo $json | yq eval -P -)
+            echo $result
+
+      - name: Output handbrake
         run: |
           cat > .intellum.yml <<-EOF
-          ${{ steps.reset-handbrake.outputs.result }}
+          ${{ steps.handbrake.outputs.result }}
           EOF
 
       - name: Output yaml file
