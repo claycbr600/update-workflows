@@ -62,7 +62,7 @@ jobs:
         with:
           cmd: |
             json='${{ steps.handbrake-config.outputs.result }}'
-            result=$(echo $json | yq eval -P -)
+            result=$(echo $json | yq -P '.')
             echo $result
 
       - name: Output handbrake
