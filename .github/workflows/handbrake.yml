@@ -2,12 +2,10 @@ name: Handbrake
 on:
   workflow_dispatch:
     inputs:
-      clusters:
-        description: 'comma separated list of cluster_stacks - ex primary_staging,europe_production'
-        type: string
+      primary_staging:
+        type: boolean
         required: false
-      reset:
-        description: 'clear handbrake config'
+      primary_production:
         type: boolean
         required: false
 
@@ -17,12 +15,18 @@ jobs:
 
     steps:
       - name: Reset handbrake
-        if: inputs.reset
-        run: |
-          echo reset handbrake config
+        id: reset-handbrake
+        uses: intellum/yq@v4.27.3
+        with:
+          cmd: |
+            result=$(yq 'del(.handbrake)' .intellum.yml)
 
-      - name: Check out repository code
-        if: ${{ !inputs.reset }}
+      - name: Output handbrake reset
         run: |
-          clusters=${{ inputs.clusters }}
-          echo clusters input count = ${#clusters}
+          cat > .intellum.yml <<-EOF
+          ${{ steps.reset-handbrake.outputs.result }}
+          EOF
+
+      - name: Output yaml file
+        run: |
+          cat .intellum.yml
