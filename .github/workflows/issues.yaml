@@ -1,14 +1,20 @@
-name: Enforce Issue Estimation
+name: Env Var Test
 on:
-  issues:
-    types:
-      - closed
+  push:
+    branches:
+    - main
 jobs:
-  add-comment:
+  env-var-test:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
 
     steps:
       - name: Dump GitHub context
         run: echo '${{ toJSON(github) }}'
+
+      - name: Hello world action step
+        id: hello
+        uses: claycbr600/env-var-test@main
+        env:
+          MY_NAME: charlie
+        with:
+          who-to-greet: 'Mona the Octocat'
