@@ -17,4 +17,4 @@ jobs:
         env:
           MY_NAME: charlie
         with:
-          who-to-greet: 'Mona the Octocat'
+          who: 'Mona the Octocat'
