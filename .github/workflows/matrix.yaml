@@ -24,10 +24,6 @@ jobs:
       - name: Dump GitHub context
         run: echo '${{ toJSON(github) }}'
 
-      - name: Test failure
-        if: matrix.index == 1
-        run: exit 1
-
   staging-image:
     needs: prepare
     runs-on: ubuntu-latest
@@ -43,3 +39,6 @@ jobs:
     steps:
       - name: hello
         run: echo hello again
+
+      - name: status checks
+        uses: .github/actions/test/action.yml

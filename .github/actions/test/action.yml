@@ -1,100 +1,21 @@
-name: Close Issue
+name: Inputs
 
 inputs:
-  commit_sha:
-    description: 'Commit sha of release tag'
-    required: true
-  token:
-    description: 'Personal access token'
-    required: true
-  dry_run:
-    description: 'Only print issues to close'
+  status_checks:
     type: boolean
     required: false
-    default: false
+    default: true
 
 runs:
   using: composite
 
   steps:
-    - name: Get release tag from commit
-      uses: actions/github-script@v5
-      id: release-tag
-      with:
-        result-encoding: string
-        script: |
-          const commit_sha = "${{ inputs.commit_sha }}"
-          let resp = await github.rest.repos.listReleases({
-            owner: context.repo.owner,
-            repo: context.repo.repo
-          })
-          const releases = resp.data
-          for (const release of releases) {
-            resp = await github.rest.git.listMatchingRefs({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `tags/${release.tag_name}`
-            })
-            let tag = resp.data[0]
-            if (tag.object.sha == commit_sha) {
-              return release.tag_name
-            }
-          }
-
-    - name: Print tag name
+    - name: status_checks true
+      if: status_checks
       shell: bash
-      run: |
-        tag_name="${{ steps.release-tag.outputs.result }}"
-        commit_sha="${{ inputs.commit_sha }}"
-        echo "### $tag_name ($commit_sha)" >> $GITHUB_STEP_SUMMARY
+      run: echo status checks enabled
 
-    - name: Set dry run param
-      id: dry-run
+    - name: status_checks false
+      if: status_checks == false
       shell: bash
-      run: |
-        dry_run=${{ inputs.dry_run || false }}
-        echo "::set-output name=result::$dry_run"
-        if $dry_run; then
-          echo "dry_run enabled"
-        fi
-
-    - name: Close release issues
-      uses: actions/github-script@v5
-      id: issues
-      with:
-        github-token: ${{ inputs.token }}
-        script: |
-          const fs = require('fs');
-          const tag = "${{ steps.release-tag.outputs.result }}"
-          const dry_run = ${{ steps.dry-run.outputs.result }}
-          console.log(`dry_run = ${dry_run}`)
-          const resp = await github.rest.repos.getReleaseByTag({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            tag: tag
-          })
-          const body = resp.data.body
-          const regexp = /claycbr600\/[\w-]+\/issues\/\d+/g
-          const issues = [...body.matchAll(regexp)].map(e => e[0])
-          for (let issue of issues) {
-            issue = issue.split('/')
-            let repo = issue[1]
-            let issue_number = issue[3]
-            let message = `closing claycbr600/${repo}#${issue_number}\n`
-            if (dry_run) {
-              message = `**dry_run enabled** skip ${message}`
-            } else {
-              github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: repo,
-                issue_number: issue_number,
-                state: "closed"
-              })
-            }
-            console.log(message)
-            fs.appendFile(process.env.GITHUB_STEP_SUMMARY, message, err => {
-              if (err) {
-                console.error(err);
-              }
-            })
-          }
+      run: echo status checks disabled
