@@ -44,4 +44,4 @@ jobs:
         run: echo hello again
 
       - name: status checks
-        uses: ./.github/actions/test/action.yml
+        uses: ./.github/actions/test
