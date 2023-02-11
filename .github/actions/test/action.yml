@@ -11,11 +11,11 @@ runs:
 
   steps:
     - name: status_checks true
-      if: status_checks
+      if: inputs.status_checks
       shell: bash
       run: echo status checks enabled
 
     - name: status_checks false
-      if: status_checks == false
+      if: inputs.status_checks == false
       shell: bash
       run: echo status checks disabled
