@@ -28,6 +28,14 @@ jobs:
         if: matrix.index == 1
         run: exit 1
 
+  staging-image:
+    needs: prepare
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: zzz
+        run: sleep 10
+
   post:
     needs: matrix-test
     runs-on: ubuntu-latest
