@@ -14,11 +14,11 @@ runs:
       run: echo status_checks = ${{ inputs.status_checks }}
 
     - name: status_checks true
-      if: inputs.status_checks
+      if: fromJSON(inputs.status_checks)
       shell: bash
       run: echo status checks enabled
 
     - name: status_checks false
-      if: inputs.status_checks == false
+      if: fromJSON(inputs.status_checks) == false
       shell: bash
       run: echo status checks disabled
