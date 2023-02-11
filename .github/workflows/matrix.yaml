@@ -45,3 +45,5 @@ jobs:
 
       - name: status checks
         uses: ./.github/actions/test
+        with:
+          status_checks: false
