@@ -19,10 +19,9 @@ assignees: ''
 
 **Link to the job run**
 <!-- if the issue occurred in Jenkins, please include a link to the job -->
-<!-- example -->
+<!-- if the issue occurred in GitHub Actions, link to the workflow run and to the Pull Request that triggered it -->
+<!-- examples -->
 <!-- https://jenkins.intellum.com/view/QA%20Environments/job/qa-create-environment/1099/ -->
-<!-- if the issue occurred in GitHub Actions, please include a link to the workflow run and a link to the Pull Request that triggered it -->
-<!-- example -->
 <!-- https://github.com/intellum/exceed/pull/52336 -->
 <!-- https://github.com/intellum/exceed/actions/runs/4174768565 -->
 
